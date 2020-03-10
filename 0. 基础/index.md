@@ -95,3 +95,45 @@ class A {
 3. 从设计角度讲，抽象类是从子类中发现了公共的东西，泛化出父类，然后子类继承父类，而接口是根本不知子类的存在，方法如何实现还不确认，预先定义。抽象类是自底而上抽象出来，而接口是自顶向下设计的。
 
 **实现接口和继承抽象类并不冲突**，可以让超人继承认类，再实现飞行接口。
+
+# 泛型
+泛型是具有占位符（类型参数）的类、结构、接口和方法，这些占位符是类、结构、接口和方法所存储或使用的一个或多个类型的占位符。泛型集合类可以将类型参数用作它所存储的对象的类型的占位符。类型参数作为其字段的类型和其方法的参数类型出现。
+
+# 委托与事件
+委托是对函数的封装，可以当作给方法的特征指定一个名称。而事件则是委托中的一种特殊形式，当发生有意义的事情时，事件对象处理通知过程。
+
+委托是一种引用方法的类型。一旦为委托分配了方法，委托将于该方法具有完全相同的行为，而事件是说在发生其他类或对象关注的事情时，类或对象可通过事件通知它们
+
+例如 addEventerListener 是一种委托，而 addEventerListener('click',fn) 传入的参数 'click' 就是事件，即表示**将fn方法委托addEventerListener登记到click事件上**
+
+```typescript
+class Cat {
+  private CatShout:Function[] = []/**事件方法 */
+  constructor(private name:string) {}
+
+  public CatShoutEventHandler(fn:Function) { /**委托 */
+    this.CatShout.push(fn)
+  }
+  
+  public Shout() { /**事件 */
+    console.log(`瞄，我是${this.name}`)
+    this.CatShout.forEach(fn => fn())
+  }
+}
+
+class Mouse {
+  constructor(private name:string) {}
+  public run() {
+    console.log(`${this.name}说：猫来了，快跑`)
+  }
+}
+
+const cat = new Cat('tom')
+const mouse1 = new Mouse('Jerry')
+const mouse2 = new Mouse('Jack')
+
+cat.CatShoutEventHandler(mouse1.run)
+cat.CatShoutEventHandler(mouse2.run)
+/**表示将Mouse的Run方法 通过Cat的委托 CatShoutEventHandler 登记到Cat的shout事件的方法数组CatShout当中。*/
+cat.Shout()
+```
